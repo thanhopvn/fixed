@@ -1,0 +1,117 @@
+<?php
+/**Chuyen huong code suu tam
+ *Copyringt DOS by Thanh Truong base on BBit by Pham Quang Bao
+ *Do not delete the line above to respect the author
+ *https://Moddao.Com
+*/
+// get the redirection url from GET variable
+$redirect_to = !empty($_GET['url'])
+ ? trim(strip_tags(stripslashes($_GET['url'])))
+ : '';
+ 
+$wait_time    = 12000; // thời gian tự động chuyển hướng (tính bằng millisecond - ở đây là 30000 ml = 30s).
+$wait_seconds = $wait_time / 1000;
+ 
+add_action('wp_head', 'redirect_to_no_index', 99);
+function redirect_to_no_index()
+{
+?>
+   <!-- tắt index trang này -->
+  <meta name="robots" content="noindex, follow">
+
+<?php
+}
+ 
+add_action('wp_head', 'redirect_to_external_link');
+
+function redirect_to_external_link()
+{
+    global $redirect_to, $wait_seconds, $wait_time;
+    
+    if (empty($redirect_to) || empty($wait_time)) {
+    return;
+    }
+    ?>
+
+    <script>var redirect = window.setTimeout(function(){window.location.href='<?php esc_html_e($redirect_to); ?>'},<?php echo $wait_time; ?>);</script>
+    <noscript><meta http-equiv="refresh" content="<?php echo $wait_seconds; ?>;url=<?php esc_attr_e($redirect_to); ?>">></noscript>
+ <?php
+}
+ 
+get_header(); //hiện thị header 
+?>
+
+ <div id="redirect-page-content"  style="width: 100%; background:#fff; height: 100%; margin: 50px 0px 30px 0px; text-align: center; font-size: 18px;">
+        <div class="redirect-message">
+        <?php if (!empty($redirect_to)) {
+        echo '<img src="https://moddao.com/wp-content/uploads/2020/02/Ball-1s-110px.gif" alt="" />';
+        echo '<p style="font-size: 95%;margin: 8px !important; color: #191919;"><h3>TRANG TẢI XUỐNG TẬP TIN</h3></p>';
+		the_ad(3322);
+        printf(__('<i>Mẹo: Dùng trình duyệt Gốc hoặc Google Chrome để tránh gặp lỗi khi tải về.</i>'),esc_html($redirect_to));
+        ?>
+			<div class="jpx-is-wrapper">
+                       <div class="jpx-is-container">
+                          <div class="jpx-is-content">
+                             <div class="jpx-is-ad jpx-position-fixed">
+                                   <div scrolling="no" width="100%" height="100%" class="jcl-wrapper" style="border: 0px; display: block; width: 100%; height: 100%;">
+                                       <div class="video-containers" id="video-container">
+                                         <br/><br/><br/><br/>
+										   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<!-- QC Chill 2 -->
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-client="ca-pub-9866624246727272"
+     data-ad-slot="7154344405"
+     data-ad-format="auto"
+     data-full-width-responsive="true"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+											<br/><br/><br/> 
+                                       </div>
+                                  </div>
+                             </div>
+                          </div>
+                       </div>
+                    </div>
+         <p style="font-size: 100%;margin: 8px 0px 15px 0px !important;color: #77C04E;">Tập tin sẽ tự động tải về sau <span id="timer"></span> giây </p> 
+         <p style="font-size: 80%;margin: 8px 0px 15px 0px !important;color: #191919;">
+			Nếu tập tin không tự động tải xuống, vui lòng <a href="<?php esc_html_e($redirect_to); ?>"><?php _e('<font color="green">Bấm vào đây!</font>'); ?></a>
+			</p> 
+       
+         <?php
+        } else {
+        _e('Link tải về bị lỗi! Liên hệ với Admin để được hỗ trợ nhé.');
+        }
+        ?><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:block"
+     data-ad-format="autorelaxed"
+     data-ad-client="ca-pub-9866624246727272"
+     data-ad-slot="9153269787"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+        </div>
+ </div>
+
+<script>
+document.getElementById('timer').innerHTML = <?php echo $wait_seconds;?>;
+var timer = <?php echo $wait_seconds;?>;
+var interval = setInterval(function() {
+   var seconds = timer;
+   if (seconds > 0) {
+    --seconds; 
+    document.getElementById('timer').innerHTML = seconds + "";
+   timer = seconds;
+   }
+   else {
+  
+   }
+  
+ }, 1000);
+</script>
+
+<?php  
+ get_footer(); //hiện thị footer
+?>
