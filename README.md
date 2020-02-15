@@ -1,0 +1,2 @@
+# fixed
+ads on mobile
