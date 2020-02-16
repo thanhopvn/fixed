@@ -1,0 +1,108 @@
+<?php
+/**Chuyen huong code suu tam
+ *Copyringt DOS by Thanh Truong base on BBit by Pham Quang Bao
+ *Do not delete the line above to respect the author
+ *https://Moddao.Com
+*/
+// get the redirection url from GET variable
+$redirect_to = !empty($_GET['url'])
+ ? trim(strip_tags(stripslashes($_GET['url'])))
+ : '';
+ 
+$wait_time    = 30000; // thời gian tự động chuyển hướng (tính bằng millisecond - ở đây là 30000 ml = 30s).
+$wait_seconds = $wait_time / 1000;
+ 
+add_action('wp_head', 'redirect_to_no_index', 99);
+function redirect_to_no_index()
+{
+?>
+   <!-- tắt index trang này -->
+  <meta name="robots" content="noindex, follow">
+
+<?php
+}
+ 
+add_action('wp_head', 'redirect_to_external_link');
+
+function redirect_to_external_link()
+{
+    global $redirect_to, $wait_seconds, $wait_time;
+    
+    if (empty($redirect_to) || empty($wait_time)) {
+    return;
+    }
+    ?>
+
+    <script>var redirect = window.setTimeout(function(){window.location.href='<?php esc_html_e($redirect_to); ?>'},<?php echo $wait_time; ?>);</script>
+    <noscript><meta http-equiv="refresh" content="<?php echo $wait_seconds; ?>;url=<?php esc_attr_e($redirect_to); ?>">></noscript>
+   <!-- gọi tới bird.css - css hiệu ứng con chim bay bay -->
+   <?php echo '<link rel="stylesheet" type="text/css" href="'.get_stylesheet_directory_uri() . '/css/chuyen-huong.css'.'">';
+        ?>
+ <?php
+}
+ 
+get_header(); //hiện thị header 
+?>
+
+
+   <div class="container">
+        <div class="bird-container bird-container--one">
+            <div class="bird bird--one"></div>
+        </div>
+
+        <div class="bird-container bird-container--two">
+            <div class="bird bird--two"></div>
+        </div>
+
+        <div class="bird-container bird-container--three">
+            <div class="bird bird--three"></div>
+        </div>
+
+        <div class="bird-container bird-container--four">
+            <div class="bird bird--four"></div>
+        </div>
+    </div>
+
+ <div id="redirect-page-content"  style="width: 100%; background:#fff; height: 100%; margin: 50px 0px 30px 0px; text-align: center; font-size: 18px;">
+        <div class="redirect-message">
+        <?php if (!empty($redirect_to)) {
+        echo '<img src="' . trailingslashit( get_stylesheet_directory_uri()) . 'images/chuyen-tiep.gif' . '" alt="" />';
+        echo '<p style="font-size: 95%;margin: 8px !important; color: #191919;"><h4>Tải tập tin về máy...</h4></p>';
+        printf(__('<h5>Bạn có chắc chắn muốn tải về tập tin?</h5>'),esc_html($redirect_to));
+        ?>
+         <p style="font-size: 90%;margin: 8px 0px 15px 0px !important;color: #191919;">(Tập tin sẽ tự động tải về sau <span style="color: red" id="timer"></span> giây) </p> 
+          <button class="chuyenhuong" style="margin: 0px 10px 0px 0px;background: #009966; border: 1px solid #009966; color: #fff; cursor: pointer; font-family: 'Oswald', arial, serif !important;
+            font-size: 13px ;  font-weight: bold ; padding: 5px 15px;text-decoration: none;text-transform: uppercase;text-shadow: none;
+        " onclick="window.location.href='<?php esc_html_e($redirect_to); ?>';return false;"><?php _e('✓ TẢI VỀ NGAY'); ?></button>
+        <button class="chuyenhuong" style="background: #033; border: 1px solid #033; color: #fff; cursor: pointer; font-family: 'Oswald', arial, serif !important;
+            font-size: 13px ;  font-weight: bold ; margin-bottom: 10px;padding: 5px 15px;text-decoration: none;text-transform: uppercase;text-shadow: none;
+        " onclick="self.close()"><?php _e('✘ Hủy bỏ'); ?></button> <br /> 
+        
+         <?php
+        } else {
+        _e('Link tải về bị lỗi! Liên hệ với Admin để được hỗ trợ nhé.');
+        }
+        ?>
+        </div>
+ </div>
+
+<script>
+document.getElementById('timer').innerHTML = <?php echo $wait_seconds;?>;
+var timer = <?php echo $wait_seconds;?>;
+var interval = setInterval(function() {
+   var seconds = timer;
+   if (seconds > 0) {
+    --seconds; 
+    document.getElementById('timer').innerHTML = seconds + "";
+   timer = seconds;
+   }
+   else {
+  
+   }
+  
+ }, 1000);
+</script>
+
+<?php  
+ get_footer(); //hiện thị footer
+?>
